@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {useState} from 'react';
 import {View, TouchableOpacity, TouchableHighlight} from 'react-native';
 import Animated, {Easing} from 'react-native-reanimated';
@@ -30,7 +31,7 @@ function runTiming(clock, value, dest) {
   };
 
   const config = {
-    duration: 800,
+    duration: 1000,
     toValue: dest,
     easing: Easing.linear,
   };
@@ -50,6 +51,13 @@ function runTiming(clock, value, dest) {
     state.position,
   ]);
 }
+/*props - {
+  onColor - in rgb
+  offColor -in rgb
+  isOn
+  onToggle
+
+}*/
 
 export const ToggleSwitch = () => {
   const [on, setOn] = useState(false);
@@ -71,61 +79,39 @@ export const ToggleSwitch = () => {
     extrapolate: Animated.Extrapolate.CLAMP,
   });
 
-  // range1 = interpolate(transX, {
-  //   inputRange: [0, 1],
-  //   outputRange: [0, 40],
-  //   extrapolate: Animated.Extrapolate.CLAMP,
-  // });
-  // range2 = interpolate(transX, {
-  //   inputRange: [0, 1],
-  //   outputRange: [40, 0],
-  //   extrapolate: Animated.Extrapolate.CLAMP,
-  // });
-  backgrndClrOn = color(
-    0,
-    156,
-    0,
-    interpolate(transX, {
-      inputRange: [0, 1],
-      outputRange: [0, 1],
-    }),
-  );
-  backgrndClrOff = color(
-    192,
-    192,
-    192,
-    interpolate(transX, {
-      inputRange: [0, 1],
-      outputRange: [0, 1],
-    }),
-  );
+  // backgrndClrOn = color(
+  //   0,
+  //   156,
+  //   0,
+  //   interpolate(transX, {
+  //     inputRange: [0, 1],
+  //     outputRange: [0, 1],
+  //   }),
+  // );
+  // backgrndClrOff = color(
+  //   192,
+  //   192,
+  //   192,
+  //   interpolate(transX, {
+  //     inputRange: [0, 1],
+  //     outputRange: [0, 1],
+  //   }),
+  // );
 
   return (
-    <Animated.View
-      style={{
-        width: 80,
-        height: 39,
-
-        borderRadius: 20,
-
-        padding: 2,
-        backgroundColor: on ? backgrndClrOn : backgrndClrOff,
+    <TouchableOpacity
+      onPress={() => {
+        setOn(!on);
       }}>
-      {/* <Animated.Code>
-        {() =>
-          block[
-            (cond(
-              eq(on, true),
-              [set(backgrndClrOn, Animated.color(0, 255, 0, 1))],
-              [set(backgrndClrOn, Animated.color(255, 255, 255))],
-            ),
-            backgrndClrOn)
-          ]
-        }
-      </Animated.Code> */}
-      <TouchableOpacity
-        onPress={() => {
-          setOn(!on);
+      <Animated.View
+        style={{
+          width: 80,
+          height: 39,
+
+          borderRadius: 20,
+
+          padding: 2,
+          backgroundColor: on ? 'rgb(0,156,0)' : 'rgb(192,192,192)',
         }}>
         <Animated.View
           style={{
@@ -134,9 +120,16 @@ export const ToggleSwitch = () => {
             borderRadius: 20,
             backgroundColor: 'white',
             padding: 5,
+
             transform: [{translateX: on ? range1 : range2}],
           }}></Animated.View>
-      </TouchableOpacity>
-    </Animated.View>
+      </Animated.View>
+    </TouchableOpacity>
   );
+};
+ToggleSwitch.PropTypes = {
+  onColor: PropTypes.string,
+  offColor: PropTypes.string,
+  isOn: PropTypes.bool,
+  onToggle: PropTypes.func,
 };
